@@ -1,0 +1,72 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yzn.UserMapper">
+    <resultMap id="result" type="com.example.yzn.User">
+        <result property="id" column="id" />
+        <result property="phone" column="phone"/>
+        <result property="salt" column="salt"/>
+        <result property="cypher" column="cypher"/>
+        <result property="nickname" column="nickname"/>
+    </resultMap>
+
+    <resultMap id="bill" type="com.example.yzn.BillDatabase">
+
+        <result property="billID" column="billID"/>
+        <result property="issuerID" column="issureID"/>
+        <result property="productName" column="productName"/>
+        <result property="price" column="price"/>
+        <result property="imageUrl" column="imageUrl"/>
+        <result property="type" column="type"/>
+        <result property="middleName" column="middleName"/>
+        <result property="currency" column="currency"/>
+        <result property="detail" column="detail"/>
+        <result property="isTaken" column="isTaken"/>
+    </resultMap>
+
+    <resultMap id="RSAKey" type="com.example.yzn.RSAKey">
+        <result property="id" column="id"/>
+        <result property="clientpk" column="clientpk"/>
+        <result property="clientsk" column="clientsk"/>
+    </resultMap>
+
+    <select id="findAll" resultMap="result">
+        SELECT * FROM user
+    </select>
+
+    <select id="select" resultMap="result">
+        SELECT * FROM user where id=#{select}
+    </select>
+
+    <select id="findByPhone" resultMap="result">
+        SELECT * FROM user where phone=#{select}
+    </select>
+
+    <select id="findAllBill" resultMap="bill">
+        SELECT * FROM bill
+    </select>
+
+
+    <insert id="insert" parameterType="com.example.yzn.User">
+        INSERT INTO user(id,phone,salt,cypher,nickname)
+        VALUES (#{id,jdbcType=VARCHAR},#{phone,jdbcType=LONGVARCHAR},#{salt, jdbcType=VARCHAR},#{cypher,jdbcType=VARCHAR},#{nickname,jdbcType=LONGVARCHAR})
+    </insert>
+
+    <insert id="insertBill" parameterType="com.example.yzn.BillDatabase">
+        INSERT INTO bill(billID,issureID,productName,price,imageUrl,type,middleName,currency,detail,isTaken)
+        VALUES (#{billID,jdbcType=VARCHAR},#{issuerID,jdbcType=VARCHAR},#{productName,jdbcType=LONGVARCHAR}
+        ,#{price,jdbcType=LONGVARCHAR},#{imageUrl,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},#{middleName,jdbcType=VARCHAR}
+        ,#{currency,jdbcType=INTEGER},#{detail,jdbcType=LONGVARCHAR},#{isTaken,jdbcType=INTEGER})
+    </insert>
+
+
+
+    <delete id="delete" parameterType="string">
+        delete from user where id=#{id}
+    </delete>
+
+    <update id="Update" parameterType="com.example.yzn.User">
+        update user set user.phone=#{phone},user.salt=#{salt},user.cypher=#{cypher},user.nickname=#(nickname) where user.id=#{id}
+    </update>
+</mapper>
