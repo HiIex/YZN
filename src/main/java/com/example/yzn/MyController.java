@@ -172,7 +172,7 @@ public class MyController {
     }
 
     //上传订单
-    @RequestMapping("upload")
+    @RequestMapping("upload/bill")
     public String uploadBill(@RequestBody BillJson billJson) throws Exception {
         Calendar calendar=Calendar.getInstance();
         int year=calendar.get(Calendar.YEAR);
@@ -343,6 +343,115 @@ public class MyController {
         System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
                 + billID + ": " + "original download complete!");
         return new OriginalImage(base64Str);
+
+    }
+
+    //上传头像
+    @RequestMapping("upload/head")
+    public String uploadHead(@RequestBody HeadJson headJson) throws Exception {
+        Calendar calendar=Calendar.getInstance();
+        int year=calendar.get(Calendar.YEAR);
+        int month=calendar.get(Calendar.MONTH)+1;
+        int date=calendar.get(Calendar.DATE);
+        int hour=calendar.get(Calendar.HOUR_OF_DAY);
+        int minute=calendar.get(Calendar.MINUTE);
+        int second=calendar.get(Calendar.SECOND);
+
+
+        HeadDatabase headDatabase=new HeadDatabase();
+        headDatabase.setId(headJson.getId());
+
+        //todo deal with situation with duplicated id
+        
+        if(headJson.getBase64Str()!=null) {
+            headDatabase.setImageUrl("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        File file=new File("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                        if(file.exists()){
+                            file.delete();
+                        }
+                        byte[] bytes = Base64.getDecoder().decode(headJson.getBase64Str());
+                        // 调整异常数据
+                        for (int i = 0; i < bytes.length; ++i) {
+                            if (bytes[i] < 0) {
+                                bytes[i] += 256;
+                            }
+                        }
+                        OutputStream outputStream = new FileOutputStream("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                        outputStream.write(bytes);
+                        outputStream.flush();
+                        outputStream.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+
+            try {
+                userService.insertHead(headDatabase);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                        + headJson.getId() + ": " + "upload head image fail!");
+                return "upload fail";
+            }
+
+            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                    + headJson.getId() + ": " + "upload head image complete!");
+            return "upload complete";
+        }else{
+            headDatabase.setImageUrl(null);
+            try {
+                userService.insertHead(headDatabase);
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                        + headDatabase.getId() + ": " + "upload head image fail!");
+                return "upload fail";
+            }
+
+            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                    + headJson.getId() + ": " + "upload head image complete!");
+            return "upload complete";
+        }
+    }
+
+    //请求头像
+    @RequestMapping(value = "/head",method = RequestMethod.GET)
+    public HeadJson getHead(String id){
+        Calendar calendar=Calendar.getInstance();
+        int year=calendar.get(Calendar.YEAR);
+        int month=calendar.get(Calendar.MONTH)+1;
+        int date=calendar.get(Calendar.DATE);
+        int hour=calendar.get(Calendar.HOUR_OF_DAY);
+        int minute=calendar.get(Calendar.MINUTE);
+        int second=calendar.get(Calendar.SECOND);
+        InputStream inputStream = null;
+        byte[] data = null;
+        String base64Str=null;
+        try{
+            inputStream = new FileInputStream("d:\\YZNData\\head\\" + id + ".jpg");
+            data = new byte[inputStream.available()];
+            inputStream.read(data);
+            inputStream.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        //转base64
+        if(data!=null){
+            base64Str=Base64.getEncoder().encodeToString(data);
+        }else{
+            base64Str=null;
+        }
+
+        System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                + id + ": " + "head image download complete!");
+        return new HeadJson(id,base64Str);
 
     }
 

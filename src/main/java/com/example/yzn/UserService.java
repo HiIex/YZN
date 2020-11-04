@@ -46,4 +46,12 @@ public class UserService {
     public List<BillDatabase> findAllBill(){
         return userMapper.findAllBill();
     }
+
+    public int insertHead(HeadDatabase headDatabase){
+        return userMapper.insertHead(headDatabase);
+    }
+
+    public HeadDatabase findHeadByID(String id){
+        return userMapper.findHeadByID(id);
+    }
 }

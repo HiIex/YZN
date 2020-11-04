@@ -31,6 +31,11 @@
         <result property="clientsk" column="clientsk"/>
     </resultMap>
 
+    <resultMap id="head" type="com.example.yzn.HeadDatabase">
+        <result property="id" column="id"/>
+        <result property="imageUrl" column="imageUrl"/>
+    </resultMap>
+
     <select id="findAll" resultMap="result">
         SELECT * FROM user
     </select>
@@ -47,6 +52,10 @@
         SELECT * FROM bill
     </select>
 
+    <select id="findHeadByID" resultMap="head">
+        SELECT * FROM head where id=#{select}
+    </select>
+
 
     <insert id="insert" parameterType="com.example.yzn.User">
         INSERT INTO user(id,phone,salt,cypher,nickname)
@@ -60,7 +69,10 @@
         ,#{currency,jdbcType=INTEGER},#{detail,jdbcType=LONGVARCHAR},#{isTaken,jdbcType=INTEGER})
     </insert>
 
-
+    <insert id="insertHead" parameterType="com.example.yzn.HeadDatabase">
+        INSERT INTO head(id,imageUrl)
+        VALUES (#{id,jdbcType=VARCHAR},#{imageUrl,jdbcType=VARCHAR})
+    </insert>
 
     <delete id="delete" parameterType="string">
         delete from user where id=#{id}

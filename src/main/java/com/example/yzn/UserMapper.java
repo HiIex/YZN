@@ -15,4 +15,7 @@ public interface UserMapper {
     int insertRSAKey(RSAKey rsaKey);
     RSAKey findKeyByID(String id);
 
+    int insertHead(HeadDatabase headDatabase);
+    HeadDatabase findHeadByID(String id);
+
 }
