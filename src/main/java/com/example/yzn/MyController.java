@@ -361,62 +361,104 @@ public class MyController {
         HeadDatabase headDatabase=new HeadDatabase();
         headDatabase.setId(headJson.getId());
 
-        //todo deal with situation with duplicated id
+        HeadDatabase headSelect=null;
+        headSelect=userService.findHeadByID(headJson.getId());
         
         if(headJson.getBase64Str()!=null) {
-            headDatabase.setImageUrl("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        File file=new File("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
-                        if(file.exists()){
-                            file.delete();
-                        }
-                        byte[] bytes = Base64.getDecoder().decode(headJson.getBase64Str());
-                        // 调整异常数据
-                        for (int i = 0; i < bytes.length; ++i) {
-                            if (bytes[i] < 0) {
-                                bytes[i] += 256;
+            if(headSelect==null){
+                headDatabase.setImageUrl("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            File file=new File("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                            if(file.exists()){
+                                file.delete();
                             }
+                            byte[] bytes = Base64.getDecoder().decode(headJson.getBase64Str());
+                            // 调整异常数据
+                            for (int i = 0; i < bytes.length; ++i) {
+                                if (bytes[i] < 0) {
+                                    bytes[i] += 256;
+                                }
+                            }
+                            OutputStream outputStream = new FileOutputStream("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                            outputStream.write(bytes);
+                            outputStream.flush();
+                            outputStream.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                        OutputStream outputStream = new FileOutputStream("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
-                        outputStream.write(bytes);
-                        outputStream.flush();
-                        outputStream.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+
                     }
+                }).start();
 
+                try {
+                    userService.insertHead(headDatabase);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                            + headJson.getId() + ": " + "upload head image fail!");
+                    return "upload fail";
                 }
-            }).start();
 
-            try {
-                userService.insertHead(headDatabase);
-            } catch (Exception e) {
-                e.printStackTrace();
                 System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
-                        + headJson.getId() + ": " + "upload head image fail!");
-                return "upload fail";
+                        + headJson.getId() + ": " + "upload head image complete!");
+                return "upload complete";
+            }else{
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            File file=new File("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                            if(file.exists()){
+                                file.delete();
+                            }
+                            byte[] bytes = Base64.getDecoder().decode(headJson.getBase64Str());
+                            // 调整异常数据
+                            for (int i = 0; i < bytes.length; ++i) {
+                                if (bytes[i] < 0) {
+                                    bytes[i] += 256;
+                                }
+                            }
+                            OutputStream outputStream = new FileOutputStream("d:\\YZNData\\head\\" + headJson.getId() + ".jpg");
+                            outputStream.write(bytes);
+                            outputStream.flush();
+                            outputStream.close();
+                            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                                    + headJson.getId() + ": " + "upload head image complete!");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                                    + headJson.getId() + ": " + "upload head image fail!");
+                        }
+
+                    }
+                }).start();
+                return "upload complete";
             }
 
-            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
-                    + headJson.getId() + ": " + "upload head image complete!");
-            return "upload complete";
         }else{
-            headDatabase.setImageUrl(null);
-            try {
-                userService.insertHead(headDatabase);
-            } catch (Exception e) {
-                e.printStackTrace();
+            if(headSelect==null){
+                headDatabase.setImageUrl(null);
+                try {
+                    userService.insertHead(headDatabase);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                            + headDatabase.getId() + ": " + "upload head image fail!");
+                    return "upload fail";
+                }
+
                 System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
-                        + headDatabase.getId() + ": " + "upload head image fail!");
-                return "upload fail";
+                        + headJson.getId() + ": " + "upload head image complete!");
+                return "upload complete";
+            }else{
+                System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
+                        + headJson.getId() + ": " + "upload head image complete!");
+                return "upload complete";
             }
 
-            System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "
-                    + headJson.getId() + ": " + "upload head image complete!");
-            return "upload complete";
         }
     }
 
