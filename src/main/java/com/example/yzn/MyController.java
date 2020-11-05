@@ -124,7 +124,7 @@ public class MyController {
         int second=calendar.get(Calendar.SECOND);
         //用serverpk加密nickname和salt
         try{
-            User user=userService.findByPhone(idRequest.getPhone());
+            User user=userService.findByPhone(AESCipher.encrypt(Config.AES_KEY.getBytes(),idRequest.getPhone()));
             if(user!=null){
                 System.out.println(year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second+"  "
                         +idRequest.getPhone()+": "+"request id and salt success!");
