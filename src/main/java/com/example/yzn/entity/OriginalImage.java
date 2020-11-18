@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.entity;
 
 public class OriginalImage {
     private String base64Str;

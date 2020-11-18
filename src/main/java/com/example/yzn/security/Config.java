@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.security;
 
 public class Config {
     public static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";

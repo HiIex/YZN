@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.entity;
 
 public class LoginResult {
     public static final int ERROR=0;

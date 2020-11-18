@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.entity;
 
 public class IDResponse {
     public static final int MATCH=1;

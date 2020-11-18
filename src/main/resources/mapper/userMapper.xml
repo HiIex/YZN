@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC
         "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.yzn.UserMapper">
-    <resultMap id="result" type="com.example.yzn.User">
+<mapper namespace="com.example.yzn.mapper.UserMapper">
+    <resultMap id="result" type="com.example.yzn.entity.User">
         <result property="id" column="id" />
         <result property="phone" column="phone"/>
         <result property="salt" column="salt"/>
@@ -11,7 +11,7 @@
         <result property="nickname" column="nickname"/>
     </resultMap>
 
-    <resultMap id="bill" type="com.example.yzn.BillDatabase">
+    <resultMap id="bill" type="com.example.yzn.entity.BillDatabase">
 
         <result property="billID" column="billID"/>
         <result property="issuerID" column="issureID"/>
@@ -25,13 +25,13 @@
         <result property="isTaken" column="isTaken"/>
     </resultMap>
 
-    <resultMap id="RSAKey" type="com.example.yzn.RSAKey">
+    <resultMap id="RSAKey" type="com.example.yzn.entity.RSAKey">
         <result property="id" column="id"/>
         <result property="clientpk" column="clientpk"/>
         <result property="clientsk" column="clientsk"/>
     </resultMap>
 
-    <resultMap id="head" type="com.example.yzn.HeadDatabase">
+    <resultMap id="head" type="com.example.yzn.entity.HeadDatabase">
         <result property="id" column="id"/>
         <result property="imageUrl" column="imageUrl"/>
     </resultMap>
@@ -57,19 +57,19 @@
     </select>
 
 
-    <insert id="insert" parameterType="com.example.yzn.User">
+    <insert id="insert" parameterType="com.example.yzn.entity.User">
         INSERT INTO user(id,phone,salt,cypher,nickname)
         VALUES (#{id,jdbcType=VARCHAR},#{phone,jdbcType=LONGVARCHAR},#{salt, jdbcType=VARCHAR},#{cypher,jdbcType=VARCHAR},#{nickname,jdbcType=LONGVARCHAR})
     </insert>
 
-    <insert id="insertBill" parameterType="com.example.yzn.BillDatabase">
+    <insert id="insertBill" parameterType="com.example.yzn.entity.BillDatabase">
         INSERT INTO bill(billID,issureID,productName,price,imageUrl,type,middleName,currency,detail,isTaken)
         VALUES (#{billID,jdbcType=VARCHAR},#{issuerID,jdbcType=VARCHAR},#{productName,jdbcType=LONGVARCHAR}
         ,#{price,jdbcType=LONGVARCHAR},#{imageUrl,jdbcType=VARCHAR},#{type,jdbcType=INTEGER},#{middleName,jdbcType=VARCHAR}
         ,#{currency,jdbcType=INTEGER},#{detail,jdbcType=LONGVARCHAR},#{isTaken,jdbcType=INTEGER})
     </insert>
 
-    <insert id="insertHead" parameterType="com.example.yzn.HeadDatabase">
+    <insert id="insertHead" parameterType="com.example.yzn.entity.HeadDatabase">
         INSERT INTO head(id,imageUrl)
         VALUES (#{id,jdbcType=VARCHAR},#{imageUrl,jdbcType=VARCHAR})
     </insert>
@@ -78,7 +78,7 @@
         delete from user where id=#{id}
     </delete>
 
-    <update id="Update" parameterType="com.example.yzn.User">
+    <update id="Update" parameterType="com.example.yzn.entity.User">
         update user set user.phone=#{phone},user.salt=#{salt},user.cypher=#{cypher},user.nickname=#(nickname) where user.id=#{id}
     </update>
 </mapper>

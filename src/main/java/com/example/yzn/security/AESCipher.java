@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.security;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

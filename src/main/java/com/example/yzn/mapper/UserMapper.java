@@ -1,5 +1,9 @@
-package com.example.yzn;
+package com.example.yzn.mapper;
 
+import com.example.yzn.entity.BillDatabase;
+import com.example.yzn.entity.HeadDatabase;
+import com.example.yzn.entity.RSAKey;
+import com.example.yzn.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 @Mapper

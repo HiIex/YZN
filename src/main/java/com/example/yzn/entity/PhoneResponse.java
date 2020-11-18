@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.entity;
 
 public class PhoneResponse {
     public final static int PERMIT=1;

@@ -1,0 +1,101 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD com.example.Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.yzn.mapper.MessageMapper">
+    <resultMap id="message" type="com.example.yzn.entity.Message">
+        <result property="fromid" column="fromid" />
+        <result property="toid" column="toid"/>
+        <result property="content" column="content"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <resultMap id="friendJson" type="com.example.yzn.entity.FriendJson">
+        <result property="id" column="id"/>
+        <result property="friendid" column="friendid"/>
+        <result property="nickname" column="nickname"/>
+        <result property="remark" column="remark"/>
+        <result property="time" column="time"/>
+    </resultMap>
+
+    <resultMap id="info" type="com.example.yzn.entity.Info">
+        <result property="id" column="id"/>
+        <result property="phone" column="phone"/>
+        <result property="nickname" column="nickname"/>
+        <result property="sex" column="sex"/>
+        <result property="birthday" column="birthday"/>
+        <result property="company" column="company"/>
+        <result property="job" column="job"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+    </resultMap>
+
+    <resultMap id="apply" type="com.example.yzn.entity.FriendApply">
+        <result property="fromid" column="fromid"/>
+        <result property="toid" column="toid"/>
+    </resultMap>
+
+
+    <select id="selectMessage" resultMap="message">
+        SELECT * FROM message where toid=#{select}
+    </select>
+
+    <insert id="insertMessage" parameterType="com.example.yzn.entity.Message">
+        INSERT INTO message(fromid,toid,content,time)
+        VALUES (#{fromid,jdbcType=VARCHAR},#{toid,jdbcType=VARCHAR},#{content, jdbcType=VARCHAR},#{time,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertFriend" parameterType="com.example.yzn.entity.FriendJson">
+        INSERT INTO friend values(#{id,jdbcType=VARCHAR},#{friendid,jdbcType=VARCHAR},#{nickname,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},#{time,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertApplication" parameterType="com.example.yzn.entity.FriendApply">
+        insert into application values(#{fromid,jdbcType=VARCHAR},#{toid,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertConfirm" parameterType="com.example.yzn.entity.FriendApply">
+        insert into confirm values(#{fromid,jdbcType=VARCHAR},#{toid,jdbcType=VARCHAR})
+    </insert>
+
+    <insert id="insertInfo" parameterType="com.example.yzn.entity.Info">
+        insert into info values(#{id,jdbcType=VARCHAR},#{phone,jdbcType=VARCHAR},#{nickname,jdbcType=VARCHAR},#{sex,jdbcType=INTEGER},#{birthday,jdbcType=VARCHAR},#{company,jdbcType=VARCHAR},#{job,jdbcType=VARCHAR},#{province,jdbcType=VARCHAR},#{city,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectFriend" resultMap="friendJson">
+        SELECT * from friend where id=#{select}
+    </select>
+
+    <select id="selectApply" resultMap="apply">
+        select * from application where toid=#{select}
+    </select>
+
+    <select id="selectConfirm" resultMap="apply">
+        select * from confirm where fromid=#{select}
+    </select>
+
+    <select id="selectInfo" resultMap="info">
+        select * from info where id=#{select}
+    </select>
+
+    <delete id="deleteMessage" parameterType="string">
+        delete from message where toid=#{select}
+    </delete>
+
+    <delete id="deleteApplication" parameterType="string">
+        delete from application where toid=#{select}
+    </delete>
+
+    <delete id="deleteConfirm">
+        delete from confirm where fromid=#{fromid} and toid=#{toid}
+    </delete>
+
+    <update id="updateFriendTime" >
+        update friend set time=#{time} where id=#{id} and friendid=#{friendid}
+    </update>
+
+    <update id="upgradeInfo">
+        update info set nickname=#{nickname}, sex=#{sex}, birthday=#{birthday}, company=#{company}, job=#{job}, province=#{province}, city=#{city} where id=#{id}
+    </update>
+
+
+</mapper>

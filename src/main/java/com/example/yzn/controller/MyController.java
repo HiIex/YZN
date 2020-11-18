@@ -1,24 +1,22 @@
-package com.example.yzn;
+package com.example.yzn.controller;
 
+import com.example.yzn.service.UserService;
+import com.example.yzn.entity.*;
+import com.example.yzn.security.AESCipher;
+import com.example.yzn.security.Config;
 import net.coobird.thumbnailator.Thumbnails;
-import org.apache.lucene.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.List;
-
-import static org.apache.lucene.util.IOUtils.*;
 
 
 @RestController
@@ -476,19 +474,26 @@ public class MyController {
         byte[] data = null;
         String base64Str=null;
         try{
-            inputStream = new FileInputStream("d:\\YZNData\\head\\" + id + ".jpg");
-            data = new byte[inputStream.available()];
-            inputStream.read(data);
-            inputStream.close();
+            //判断指定路径文件是否存在
+            File file=new File("d:\\YZNData\\head\\" + id + ".jpg");
+            if(file.exists()){
+                inputStream = new FileInputStream("d:\\YZNData\\head\\" + id + ".jpg");
+                data = new byte[inputStream.available()];
+                inputStream.read(data);
+                inputStream.close();
+                //转base64
+                if(data!=null){
+                    base64Str=Base64.getEncoder().encodeToString(data);
+                }else{
+                    base64Str=null;
+                }
+            }else{
+                base64Str=null;
+            }
+
         }catch (Exception e){
             e.printStackTrace();
-        }
-
-        //转base64
-        if(data!=null){
-            base64Str=Base64.getEncoder().encodeToString(data);
-        }else{
-            base64Str=null;
+            return new HeadJson(id,null);
         }
 
         System.out.println(year + "-" + month + "-" + date + " " + hour + ":" + minute + ":" + second + "  "

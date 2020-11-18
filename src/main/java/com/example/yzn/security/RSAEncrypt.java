@@ -1,4 +1,4 @@
-package com.example.yzn;
+package com.example.yzn.security;
 
 import org.apache.commons.codec.binary.Base64;
 
